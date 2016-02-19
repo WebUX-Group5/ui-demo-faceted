@@ -1,0 +1,98 @@
+$lighter-color: #876;
+$lighter-color-bg: #cde;
+$even-lighter-color: #eee;
+$alternate-row-color: #eef;
+
+.results {
+    ul {
+        list-style-type:none;
+        padding:0;
+    }
+
+    li:nth-child(even) {
+        background:$alternate-row-color;
+    }
+}
+
+ a.expand {
+    cursor: pointer;
+}
+
+.tag-thing {
+    font-size: 0.8em;
+    color: $lighter-color;
+    padding:0.2em;
+    margin:0 0.2em;
+    display:block-inline;
+    h4, h5 {
+        display:inline;
+    }
+}
+
+.tag-thing-colored {
+    @extend .tag-thing;
+    background: $lighter-color-bg;
+}
+
+.resultItem {
+    display: flex;
+    margin-bottom:0.5em;
+    padding-top:0.5em;
+
+    //font-size:2em;
+    .party {
+        @extend .tag-thing-colored;
+    }
+
+    .role {
+        @extend .tag-thing;
+    }
+
+    .occupation {
+        @extend .tag-thing;
+    }
+
+    .speaker {
+        width:12em;
+        padding:0.5em;
+
+        div.image {
+            width:8em;
+            height:8em;
+            overflow:hidden;
+            border: 1px solid $lighter-color;
+            border-radius: 8em;
+            margin-left:1.5em;
+            padding:0;
+        }
+
+        img.speaker {
+            width: 8em;
+            padding:0;
+        }
+
+    }
+
+    .content {
+        max-width:48em;
+        text-align: justify;
+        .text {
+            white-space: pre-wrap;
+        }
+
+    }
+}
+
+
+.facet-widget {
+    padding:0.5em;
+    margin:0.2em 0;
+
+    border-bottom: 1px solid $even-lighter-color;
+    &:last-child { border-bottom:0; }
+
+}
+
+
+
+h4 label {font-weight:normal; font-size:0.75em; }

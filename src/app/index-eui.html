@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ElasticUI Demo</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" type="text/css" href="/styles/elasticuidemo.css">
+
+</head>
+<body ng-app="FacetedUI" eui-index="'opendata'"><!-- ACTION: change to index name -->
+
+<div class="header">
+
+  <ul class="nav nav-pills pull-right">
+    <li><a href="index.html">Home</a></li>
+    <li class="active"><a href="index-eui.html">EUI</a></li>
+  </ul>
+
+  <h1 class="text-muted">Elasticsearch</h1>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-2 sidebar">
+
+      <h1>ElasticUI</h1>
+
+      <h3>Speaker Name:</h3>
+      <eui-searchbox field="'name'"></eui-searchbox> <!-- ACTION: change to field to search on -->
+      <h1>Facets</h1>
+
+      <h3>Occupation</h3>
+      <eui-singleselect field="'occupation'" size="5"></eui-singleselect>
+      <!-- ACTION: change to field to use as facet -->
+      <h3>Political Party</h3>
+      <eui-singleselect field="'current_party'" size="5"></eui-singleselect>
+      <!-- ACTION: change to field to use as facet -->
+      <h3>Role<!-- (with or filter)--></h3>
+
+      <div eui-or-filter>
+        <div>
+          <input id="cbox1" type="checkbox" eui-filter="ejs.TermsFilter('role', 'pres')" ng-model="filter.enabled">
+          <label for="cbox1">pres</label>
+        </div>
+
+        <div>
+          <input id="cbox2" type="checkbox" eui-filter="ejs.TermsFilter('role', 'abg')" ng-model="filter.enabled">
+          <label for="cbox2">abg</label>
+        </div>
+        <div>
+          <input id="cbox3" type="checkbox" eui-filter="ejs.TermsFilter('role', 'other')" ng-model="filter.enabled">
+          <label for="cbox3">other</label>
+        </div>
+      </div>
+
+      <eui-singleselect field="'role'" size="10"></eui-singleselect> <!-- ACTION: change to field to use as facet -->
+      <div>
+        <ul class="nav nav-list"
+            eui-aggregation="ejs.DateHistogramAggregation('date').field('date').timeZone(2).interval('1d').minDocCount(0)"
+            eui-filter-self="false">
+          <li class="nav-header"></li>
+          <div eui-filter="ejs.RangeFilter('date').gte((dateSelectorChartConfig.xAxis.manualMin | euiRound))"
+               eui-enabled="dateSelectorChartConfig.xAxis.manualMin"></div>
+          <div eui-filter="ejs.RangeFilter('date').lte((dateSelectorChartConfig.xAxis.manualMax | euiRound))"
+               eui-enabled="dateSelectorChartConfig.xAxis.manualMax"></div>
+          <eui-var eui-key="dateSelectorChartConfig" eui-value='
+{
+   "series":[
+      {
+         "data":(aggResult.buckets | euiMap : "doc_count"),
+         "id":"series-0"
+      }
+   ],
+   "xAxis":{
+      "type":"datetime",
+      "currentMin":null,
+      "currentMax":null,
+      "manualMin":dateSelectorChartConfig.xAxis.manualMin,
+      "manualMax":dateSelectorChartConfig.xAxis.manualMax,
+      "minRange":"3600000"
+   },
+   "yAxis":{
+      "gridLineWidth":0,
+      "minorGridLineWidth":0,
+      "labels":{
+         "enabled":false
+      },
+      "title":null,
+      "min":0,
+      "lineWidth":0,
+      "minorGridLineWidth":0,
+      "lineColor":"transparent",
+      "minorticklength":0,
+      "ticklength":0
+   },
+   "options":{
+      "chart":{
+         "zoomType":"x",
+         "backgroundColor":"#3A3A3A"
+      },
+      "plotOptions": {
+                 "line": {
+        "marker": {
+            "enabled":false
+        }
+                 }
+      },
+      "title":null,
+      "legend":{
+         "enabled":false
+      }
+   }
+}
+                 '/>
+          <highchart style="height:120px;width:250px;" config='dateSelectorChartConfig'></highchart>
+        </ul>
+      </div>
+
+      <h3>Duration</h3>
+      <eui-singleselect field="'duration'" size="10"></eui-singleselect>
+      <!-- ACTION: change to field to use as facet -->
+      <h3>Results Per Page</h3>
+      <select ng-model="indexVM.pageSize">
+        <option ng-repeat="item in [10, 20, 50, 100]">{{item}}</option>
+      </select>
+    </div>
+
+    <div class="col-xs-9 col-xs-offset-3 main">
+
+      <!--<h1>Results</h1>
+      <ul>
+          <li ng-repeat="doc in indexVM.results.hits.hits">
+              <a href="{{doc._source.text | json | limitTo: 500}}">{{doc._source.text | json | limitTo: 500}}</a>-->
+      <!-- OPTIONAL: display more meaningful data instead of json -->
+      <!--     </li>
+       </ul>-->
+      <div class="col-lg-8 results">
+        <h3>{{c.hits}} Result{{c.hits == 1? '' : 's'}}</h3>
+        <ul>
+          <li ng-repeat="doc in indexVM.results.hits.hits" class="result-list-item">
+            <faceted-gui-item item="doc._source" score="doc.score"></faceted-gui-item>
+          </li>
+        </ul>
+      </div>
+
+      <eui-simple-paging></eui-simple-paging>
+    </div>
+  </div>
+</div>
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/elasticsearch/elasticsearch.js"></script>
+<script src="/bower_components/elastic.js/dist/elastic.js"></script>
+<script src="/bower_components/elasticui/dist/elasticui.min.js"></script>
+<script src="/bower_components/crossfilter/crossfilter.js"></script>
+<script src="/bower_components/d3/d3.js"></script>
+<script src="/bower_components/dcjs/dc.js"></script>
+<script src="/bower_components/ng-debounce/angular-debounce.js"></script>
+<script src="/bower_components/angularjs-slider/dist/rzslider.js"></script>
+<!-- endbower -->
+<script src="/bower_components/elasticsearch/elasticsearch.angular.js"></script>
+<script src="/bower_components/dangle/dist/dangle.js"></script>
+<!-- endbuild -->
+
+<!-- build:js scripts/plugins.js -->
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+<!-- endbuild -->
+
+<!-- build:js scripts/main.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/item-directive.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faceted UI Demo</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="styles/maindendogram.css"/>
+  <link rel="stylesheet" href="/bower_components/dangle/css/dangle.css">
+
+
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="/bower_components/dcjs/dc.css"/>
+  <link rel="stylesheet" href="/bower_components/angularjs-slider/dist/rzslider.css"/>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+
+</head>
+<body>
+<!--[if lt IE 10]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+  your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div class="container"
+     ng-app="FacetedUI">
+
+  <div class="header">
+
+    <ul class="nav nav-pills pull-right sm">
+      <li class="active"><a href="index.html#">Home</a></li>
+      <li><a href="index-eui.html">EUI</a></li>
+    </ul>
+
+    <h1 class="text-muted">Elasticsearch</h1>
+  </div>
+
+  <div class="row" ng-controller="FacetedDemoController as c">
+    <div class="col-lg-4 col-md-5 col-sm-6">
+      <label><input type="checkbox" ng-model="c.showQuery"/>Show Query</label>
+      (Took {{c.lastQueryTime / 1000}} sec.)
+      <div ng-show="c.showQuery">
+        <pre>{{c.query}}</pre>
+        <pre>{{c.queryDSL}}</pre>
+      </div>
+      <form>
+
+        <div class="facet-widget">
+          <h4>Search Text
+            <a class="btn btn-default btn-sm" ng-if="c.queryContains('freetext')" ng-click="c.resetField('freetext')">reset</a>
+          </h4>
+          <input id="query" type="text"
+                 ng-model="c.query.freetext"
+                 ng-change="c.debounceRefresh()"/>
+
+        </div>
+
+        <div class="facet-widget">
+          <h4 data-toggle="collapse" href="#partyField">Political Party
+            <a class="btn btn-default btn-sm" ng-if="c.queryContains('party')"
+               ng-click="c.resetField('party')">reset</a>
+          </h4>
+
+          <div id="partyField" class="in">
+            <div ng-repeat="bucket in c.aggregations.party.buckets"
+                 ng-if="bucket.doc_count">
+              <input type="checkbox"
+                     ng-change="c.refresh()"
+                     ng-model="c.query.party[bucket.key]"
+                     id="cb_party_{{bucket.key}}"
+                     value="{{bucket.key}}"/>
+              <label for="cb_party_{{bucket.key}}">{{convertPartyCase(bucket.key)}} ({{bucket.doc_count}})</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="facet-widget">
+          <h4>Legislative Period
+            <a class="btn btn-default btn-sm" ng-if="c.queryContains('llp')" ng-click="c.resetField('llp')">reset</a>
+          </h4>
+
+          <div ng-repeat="bucket in c.aggregations.llp.buckets"
+               ng-if="bucket.doc_count">
+            <input type="radio"
+                   ng-change="c.refresh()"
+                   ng-model="c.query.llp"
+                   id="cb_llp_{{bucket.key}}"
+                   value="{{bucket.key}}"/>
+            <label for="cb_llp_{{bucket.key}}">{{bucket.key}} ({{bucket.doc_count}})</label>
+          </div>
+        </div>
+
+
+        <div class="facet-widget">
+          <h4>Date <label> <input type="checkbox" ng-model="c.useDateSlider" ng-change="c.refresh()"/> use date </label>
+          </h4>
+          <div>
+            <fs-date-histo bind="c.dangleFullDateHisto"></fs-date-histo>
+            <rzslider
+              rz-slider-model="c.dateSlider.min"
+              rz-slider-high="c.dateSlider.max"
+              rz-slider-options="c.dateSliderOptions"></rzslider>
+          </div>
+        </div>
+
+        <div class="facet-widget">
+          <h4>Speaker Role</h4>
+
+          <div>
+            <a class="btn btn-default btn-sm" ng-if="c.queryContains('role')" ng-click="c.resetField('role')">reset</a>
+          </div>
+          <div>
+            <label><input type="checkbox" ng-model="c.showHiddenChart" ng-change="c.updateHiddenChartSetting()"/>Show Hidden Charts</label>
+          </div>
+
+          <div ng-repeat="bucket in c.aggregations.role.buckets"
+               ng-if="bucket.doc_count">
+            <input type="radio"
+                   ng-change="c.refresh()"
+                   ng-model="c.query.role"
+                   id="cb_role_{{bucket.key}}"
+                   value="{{bucket.key}}"/>
+            <label for="cb_role_{{bucket.key}}">{{c.roleLongname[bucket.key]}} ({{bucket.doc_count}})</label>
+
+            <div>
+              <div ng-show="c.showHiddenChart">
+
+                <h4>Top 10 Words Used</h4>
+                <mainwordcloud-gui-item buckets="c.aggregations.tags.buckets"
+                                        bind="bucket.toptags.buckets"></mainwordcloud-gui-item>
+                <h4></h4>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="facet-widget">
+          <h4>Speaker Occupation
+            <a class="btn btn-default btn-sm" ng-if="c.queryContains('occupation')"
+               ng-click="c.resetField('occupation')">reset</a>
+          </h4>
+
+          <div ng-repeat="bucket in c.aggregations.occupation.buckets"
+               ng-if="bucket.doc_count">
+            <input type="radio"
+                   ng-change="c.refresh()"
+                   ng-model="c.query.occupation"
+                   id="cb_role_{{bucket.key}}"
+                   value="{{bucket.key}}"/>
+            <label for="cb_role_{{bucket.key}}" title="{{bucket.key}}">
+              {{bucket.key|limitTo:20}}{{bucket.key.length > 20 ? '...' : ''}}
+              <small>({{bucket.doc_count}})</small>
+            </label>
+          </div>
+        </div>
+
+        <div class="facet-widget">
+          <h4>Speech Duration
+            <a class="btn btn-default btn-sm" ng-if="c.queryContains('duration')" ng-click="c.resetField('duration')">reset</a>
+          </h4>
+
+          <div>
+            <label><input type="checkbox" ng-model="c.showHiddenChart" ng-change="c.updateHiddenChartSetting()"/>Show Hidden Charts</label>
+
+            <div ng-show="c.showHiddenChart">
+              <durationPieChart-gui-item bind="c.aggregations.duration.buckets"></durationPieChart-gui-item>
+            </div>
+          </div>
+
+          <div ng-repeat="bucket in c.aggregations.duration.buckets"
+               ng-if="bucket.doc_count">
+            <input type="radio"
+                   ng-model="c.query.duration"
+                   ng-change="c.refresh()"
+                   id="cb_duration_{{bucket.key}}"
+                   value="{{bucket.key}}"/>
+            <label for="cb_duration_{{bucket.key}}">{{bucket.key}} ({{bucket.doc_count}})</label>
+          </div>
+
+        </div>
+
+        <div>
+          <div ng-show="c.showHiddenChart">
+            <durationhistogram-gui-item bind="c.aggregations.duration.buckets"></durationhistogram-gui-item>
+          </div>
+        </div>
+
+
+      </form>
+
+    </div>
+
+    <div class="col-lg-8 results col-md-7 col-sm-6">
+
+      <!-- Search breadcrumb -->
+      <div class="search-breadcrumb" ng-show="!c.queryIsEmpty()">
+        <ol class="breadcrumb">
+          <li>
+            <a href="#" ng-click="c.resetQuery()">
+              <span class="glyphicon glyphicon-remove"></span>
+              Reset All
+            </a>
+          </li>
+          <li ng-repeat="(field, value) in c.query"
+              ng-if="field!='date'">  <!-- quick hack, just don't display the datefilter here -->
+            <a href="#" ng-click="c.resetField(field)">
+              <span class="glyphicon glyphicon-remove"></span>
+            </a> {{field}}:{{value}}
+          </li>
+        </ol>
+      </div>
+      <!-- Search breadcrumb end -->
+
+      <!-- Result count -->
+      <h4>
+        {{c.hits}} Result{{c.hits == 1? '' : 's'}}
+      </h4>
+      <!-- Result count end -->
+
+      <!-- Tabs to switch result view -->
+      <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{'active':c.tabIsShown('text')}">
+          <a href="#" ng-click="c.showTab('text')">Textual</a>
+        </li>
+        <li role="presentation" ng-class="{'active':c.tabIsShown('vis')}">
+          <a href="#" ng-click="c.showTab('vis')">Visualisations</a>
+        </li>
+      </ul>
+      <!-- Tabs to switch result view end -->
+
+      <!-- Result set -->
+      <div ng-show="c.tabIsShown('text')">
+
+        <ul>
+          <li ng-repeat="item in c.results" class="result-list-item">
+            <faceted-gui-item item="item._source" score="item.score"
+                              query-text="c.getQueryText()"></faceted-gui-item>
+          </li>
+        </ul>
+      </div>
+      <!-- Result set end -->
+
+      <!-- Visualisations -->
+      <div ng-show="c.tabIsShown('vis')">
+        <div class="facet-widget">
+          <div style="display:inline-block;width: 700px; heigth:800px">
+            <h4>Speech Dates Histogram</h4>
+            <fs-date-histo bind="c.dangleDateHisto"></fs-date-histo>
+          </div>
+        </div>
+        <h3>Overall Diagram View</h3>
+        {{c.aggregations.buckets}}
+        <maindendogram-gui-item bind="c.mainTreeDiagram"
+                                confirm-action="convertPartyCase(arg1)"></maindendogram-gui-item>
+      </div>
+      <!-- Visualisations end -->
+
+    </div> <!-- END col -->
+  </div> <!-- END row/container/controller -->
+
+  <div class="footer">
+    <p>Faceted UI demo project</p>
+  </div>
+</div>
+
+<!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/elasticsearch/elasticsearch.js"></script>
+<script src="/bower_components/elastic.js/dist/elastic.js"></script>
+<script src="/bower_components/elasticui/dist/elasticui.min.js"></script>
+<script src="/bower_components/crossfilter/crossfilter.js"></script>
+<script src="/bower_components/d3/d3.js"></script>
+<script src="/bower_components/dcjs/dc.js"></script>
+<script src="/bower_components/ng-debounce/angular-debounce.js"></script>
+<script src="/bower_components/angularjs-slider/dist/rzslider.js"></script>
+<!-- endbower -->
+
+<!-- extra dependencies the inclusion of which is *not* managed by bower -->
+<script src="/bower_components/elasticsearch/elasticsearch.angular.js"></script>
+<script src="/bower_components/dangle/dist/dangle.js"></script>
+
+<!-- end extra dependencies  -->
+<!-- endbuild -->
+
+<!-- build:js scripts/plugins.js -->
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+<!-- endbuild -->
+
+<!-- build:js scripts/main.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/query-service.js"></script>
+<script src="directives/item-directive.js"></script>
+<script src="directives/mainwordcloud-directive.js"></script>
+<script src="directives/durationpiechart-directive.js"></script>
+<script src="directives/maindendogram-directive.js"></script>
+<script src="directives/durationhistogram-directive.js"></script>
+<!-- endbuild -->
+</body>
+</html>
