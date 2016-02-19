@@ -58,7 +58,7 @@ exectue the file `elasticsearch-2.1.0\bin\elasticsearch.bat`
 
 
 # Project Screenshots:
-<img src="/sreenshots/application_native.png" width="380" height="450">
+<img src="/screenshots/application_native.png" width="380" height="450">
 <img src="/screenshots/application_elasticui.png" width="380" height="450">
 <img src="/screenshots/histogram_diagram.png" width="380" height="450">
 <img src="/screenshots/top_words.png" width="200" height="400">
