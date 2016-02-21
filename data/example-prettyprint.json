@@ -1,0 +1,16 @@
+{
+  "current_party": "TDD",
+  "name": "Lorem Ipsum",
+  "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "wordlen": 19,
+  "llp": 23,
+  "session_nr": 2,
+  "birthdate": "1967-12-01",
+  "duration": 120,
+  "role": "abg",
+  "date": "2008-10-24T12:28:00+00:00",
+  "deathdate": null,
+  "image": "https://github.com/",
+  "deceased": false,
+  "occupation": "Abgeordneter"
+}
