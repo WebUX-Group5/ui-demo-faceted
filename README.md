@@ -10,7 +10,7 @@
 **Prof. Keith Andrews**, at TU Graz,
 Austria ([IAWEB](http://www.iicm.tugraz.at/keith "IAWEB")).
 
-To reference our, please use :
+To reference our work, please use:
 
     @misc{blum2016faceted,
       author = "Mathias Blum and Matthias Frey and Daniel Lamprecht and Nelson Silva",
@@ -58,7 +58,7 @@ exectue the file `elasticsearch-2.1.0\bin\elasticsearch.bat`
 
 
 # Project Screenshots:
-<img src="/screenshots/application_native.png" width="380" height="450">
-<img src="/screenshots/application_elasticui.png" width="380" height="450">
-<img src="/screenshots/histogram_diagram.png" width="380" height="450">
-<img src="/screenshots/top_words.png" width="200" height="400">
+<img src="/screenshots/application_native.png" width="358" height="532">
+<img src="/screenshots/application_elasticui.png" width="358" height="532">
+<img src="/screenshots/histogram_diagram.png" width="587" height="532">
+<img src="/screenshots/top_words.png" width="244" height="532">
