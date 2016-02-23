@@ -19,6 +19,7 @@ To reference our work, please use:
       note   = "Faceted Navigation for Open Data: Using Elasticsearch for offenesparlament.at"
     }
 
+	DOI: 10.13140/RG.2.1.1594.3447
 
 # Web Project
 
