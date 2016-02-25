@@ -12,14 +12,20 @@ Austria ([IAWEB](http://www.iicm.tugraz.at/keith "IAWEB")).
 
 To reference our work, please use:
 
-    @misc{blum2016faceted,
-      author = "Mathias Blum and Matthias Frey and Daniel Lamprecht and Nelson Silva",
-      title  = "Faceted Navigation for Open Data: Using Elasticsearch for offenesparlament.at",
-      date   = "2016-01-22",
-      note   = "Faceted Navigation for Open Data: Using Elasticsearch for offenesparlament.at"
-    }
+@Electronic{Blum2016faceted,
+  Title                    = {Faceted Navigation for Open Data: Using Elasticsearch for offenesparlament.at},
+  Author                   = {Mathias Blum and Matthias Frey and Daniel Lamprecht and Nelson Silva},
+  Url                      = {https://goo.gl/28wK5P},
 
-	DOI: 10.13140/RG.2.1.1594.3447
+  Date                     = {2016-01-22},
+  Doi                      = {10.13140/RG.2.1.1594.3447},
+  Owner                    = {nsilva},
+  Timestamp                = {2016.02.18}
+}
+
+ - report.pdf: DOI: 10.13140/RG.2.1.1594.3447
+
+
 
 # Web Project
 
