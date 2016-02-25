@@ -20,7 +20,6 @@ To reference our work, please use:
       Month                    = {12},
       Url                      = {https://goo.gl/28wK5P},
       Year                     = {2015},
-
       Date                     = {2015-12-15},
       Doi                      = {10.13140/RG.2.1.4996.0720},
       Owner                    = {nsilva},
@@ -31,11 +30,11 @@ To reference our work, please use:
 
 
   Final Report
+  
     @Electronic{Blum2016faceted,
       Title                    = {Faceted Navigation for Open Data: Using Elasticsearch for offenesparlament.at},
       Author                   = {Mathias Blum and Matthias Frey and Daniel Lamprecht and Nelson Silva},
       Url                      = {https://goo.gl/28wK5P},
-
       Date                     = {2016-01-22},
       Doi                      = {10.13140/RG.2.1.1594.3447},
       Owner                    = {nsilva},
