@@ -12,6 +12,25 @@ Austria ([IAWEB](http://www.iicm.tugraz.at/keith "IAWEB")).
 
 To reference our work, please use:
 
+  Initial Survey
+
+    @Electronic{Blum2015survey,
+      Title                    = {Faceted User Interfaces Survey},
+      Author                   = {Mathias Blum and Matthias Frey and Daniel Lamprecht and Nelson Silva},
+      Month                    = {12},
+      Url                      = {https://goo.gl/28wK5P},
+      Year                     = {2015},
+
+      Date                     = {2015-12-15},
+      Doi                      = {10.13140/RG.2.1.4996.0720},
+      Owner                    = {nsilva},
+      Timestamp                = {2016.02.18}
+    }
+
+    - survey.pdf DOI: 10.13140/RG.2.1.4996.0720
+
+
+  Final Report
     @Electronic{Blum2016faceted,
       Title                    = {Faceted Navigation for Open Data: Using Elasticsearch for offenesparlament.at},
       Author                   = {Mathias Blum and Matthias Frey and Daniel Lamprecht and Nelson Silva},
@@ -23,8 +42,7 @@ To reference our work, please use:
       Timestamp                = {2016.02.18}
     }
 
-    - report.pdf: DOI: 10.13140/RG.2.1.1594.3447
-
+    - report.pdf DOI: 10.13140/RG.2.1.1594.3447
 
 
 # Web Project
