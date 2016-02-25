@@ -1,9 +1,10 @@
 # Faceted Search with Elasticsearch, Angular.js and D3.js
 ### Authors:
-* Nelson Silva
+
 * Mathias Blum
 * Matthias Frey
 * Daniel Lamprecht
+* Nelson Silva
 
 > This project was created in the course of the lecture
 **Information Architecture and Web Usability**, held by
@@ -30,7 +31,7 @@ To reference our work, please use:
 
 
   Final Report
-  
+
     @Electronic{Blum2016faceted,
       Title                    = {Faceted Navigation for Open Data: Using Elasticsearch for offenesparlament.at},
       Author                   = {Mathias Blum and Matthias Frey and Daniel Lamprecht and Nelson Silva},
