@@ -15,13 +15,37 @@
 
   // esFactory() creates a configured client instance. Turn that instance
   // into a service so that it can be required by other parts of the application
-  app.service('esClient', function (esFactory) {
+  app.service('esClientJs', function (esFactory) {
     return esFactory({
       host: 'localhost:9200/opendata',
       //apiVersion: '1.2',
       log: 'trace'
     });
   });
+
+  app.service('esClientPythonProxy', ['$http', function ($http) {
+    function esClient(host) {
+      this.search = function search(dsl) {
+        return $http.post(host, JSON.stringify(dsl))
+          .then(function(response) {
+            return response.data;
+          });
+      }
+    };
+    return new esClient('http://localhost:5000/search');
+  }]);
+
+  app.factory('esClient', [
+  'esClientJs', 'esClientPythonProxy', 'Config',
+  function(esClientJs, esClientPythonProxy, Config) {
+    var dependencyConfig = Config.esClient;
+    var implementations = {
+      js: esClientJs,
+      py: esClientPythonProxy
+    };
+    var client = implementations[dependencyConfig];
+    return client;
+  }]);
 
   /**
    * Map aggregation part of an elastic result to the format that
