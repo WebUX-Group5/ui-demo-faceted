@@ -9,13 +9,15 @@ CORS(app)
 
 client = Elasticsearch()
 
+@app.route('/test', methods=['GET']):
+    return "Test!"
+
 @app.route('/search', methods=['POST'])
 def es():
     data = request.get_json(force=True)
     body = dict([(k, data['body'][k]) for k in ['query', 'aggregations']\
                  if k in data['body']])
     result = client.search(body=data['body'])
-    print(result)
     return jsonify(result)
 
 if __name__ == '__main__':
