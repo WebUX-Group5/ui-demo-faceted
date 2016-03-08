@@ -38,7 +38,7 @@
    * An angular template - filter that highlights a specific term in a text
    */
   angular.module('FacetedUI')
-    .filter('highlight', function ($sce) {
+    .filter('highlight', ['$sce', function ($sce) {
       return function (text, phrase) {
         if (phrase) {
           text = text.replace(new RegExp('(' + phrase + ')', 'gi'),
@@ -46,7 +46,7 @@
         }
         return $sce.trustAsHtml(text);
       };
-    });
+    }]);
 
 
 }());
