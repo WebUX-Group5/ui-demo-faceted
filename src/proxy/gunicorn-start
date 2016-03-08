@@ -1,0 +1,5 @@
+#!/bin/bash
+env/bin/gunicorn server:app \
+--bind 127.0.0.1:8090 -D \
+--log-file gunicorn.log \
+-p gunicorn.pid
