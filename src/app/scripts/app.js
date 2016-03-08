@@ -23,6 +23,21 @@
     });
   }]);
 
+  /**
+   * Switch between the two implementations - js/es only orwith proxy
+   */
+  app.factory('esClient', ['esClientJs', 'esClientPythonProxy', 'Config',
+    function(esClientJs, esClientPythonProxy, Config) {
+      var dependencyConfig = Config.esClient;
+      var implementations = {
+        js: esClientJs,
+        py: esClientPythonProxy
+      };
+      var client = implementations[dependencyConfig];
+      return client;
+    }
+  ]);
+
   app.service('esClientPythonProxy', ['$http', function ($http) {
     function esClient(host) {
       this.search = function search(dsl) {
@@ -32,7 +47,7 @@
           });
       }
     };
-    return new esClient('http://localhost:5000/search');
+    return new esClient('/search');
   }]);
 
   app.factory('esClient', [
