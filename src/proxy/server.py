@@ -9,7 +9,8 @@ CORS(app)
 
 client = Elasticsearch()
 
-@app.route('/test', methods=['GET']):
+@app.route('/test', methods=['GET'])
+def test():
     return "Test!"
 
 @app.route('/search', methods=['POST'])
