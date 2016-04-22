@@ -48,6 +48,7 @@ To reference our work, please use:
 # Web Project
 
 In `/src`, a generic web-project with bower and npm is set up.
+[![DOI](https://zenodo.org/badge/20295/njss/ui-demo-faceted.svg)](https://zenodo.org/badge/latestdoi/20295/njss/ui-demo-faceted)
 
 ## Installation
 
