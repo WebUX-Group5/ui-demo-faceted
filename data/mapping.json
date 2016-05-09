@@ -3,7 +3,7 @@
       "properties": {
          "birthdate": {
             "type": "string"
-         
+
          },
          "current_party": {
             "type": "string"
@@ -29,8 +29,18 @@
             "type": "long"
          },
          "name": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type" : "multi_field",
+            "fields" : {
+                 "name_analyzed" : {
+                     "type" : "string",
+                     "index" : "analyzed",
+                     "path": "just_name"
+                  },
+                 "name" : {
+                     "type" : "string",
+                     "index" : "not_analyzed"
+                 }
+            }
          },
          "occupation": {
             "type": "string",

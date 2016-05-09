@@ -71,6 +71,8 @@
       var minValue = 0, maxValue = 100000;
 
       this.results = [];
+      this.from = 0;
+      this.size = 10;
       this.aggregations = {};
       this.query = {};
       this.queryDSL = {};
@@ -138,6 +140,10 @@
 
       queryBuilderService.setFacetConfig('freetext',
         {field: 'text', type: 'analysedTerm', key: 'freetext'},
+        false);
+
+      queryBuilderService.setFacetConfig('name',
+        {field: 'name', type: 'term', key: 'name'},
         false);
 
       //
@@ -383,6 +389,9 @@
         // Apply some filters etc on query
         cleanQuery();
 
+        // Reset paging
+        self.from = 0;
+
         // build queryDSL
         self.queryDSL = queryBuilderService.buildQueryDSL(self.query);
 
@@ -453,6 +462,29 @@
 
           });
       };
+
+      /**
+       * Simmilar to refresh, but just adding results
+       */
+      this.loadMore = function() {
+        self.from += self.size;
+        self.queryDSL = queryBuilderService.buildQueryDSL(self.query);
+        self.queryDSL.body.from = self.from;
+        esClient.search(self.queryDSL)
+          .then(function (body) {
+            self.statusOk = true;
+            self.statusInProgress = false;
+            console.log(body.hits.hits.map(function(r) { return r._id; }));
+            self.results = self.results.concat(body.hits.hits);
+            self.lastQueryTime = body.took;
+            self.hits = body.hits.total;
+          })
+          .catch(function (error) {
+            self.statusOk = false;
+            self.statusInProgress = false;
+            $log.error(error);
+          });
+      }
 
       // Convert party strings to proper case (available through scope)
       $scope.convertPartyCase = function (party) {

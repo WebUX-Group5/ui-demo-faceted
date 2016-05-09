@@ -8,7 +8,6 @@
     this.query = {};
     this.queryDSL = {};
     this.aggregations = {};
-
     this.facets = {};
 
     function termClause(query, facet) {
@@ -85,7 +84,9 @@
         clause,
         queryDSL = {
           body: {
-            aggregations: {}
+            aggregations: {},
+            from: 0,
+            size: 10
           }
         };
 
@@ -100,6 +101,7 @@
       // Build query clause
       for (key in facets) {
         facet = facets[key];
+
         if (query[key] && facet.query) {
           // the field is set in the query, so we set up the
           // filter in queryDSL
