@@ -62,31 +62,6 @@
     return client;
   }]);
 
-  /**
-   * Map aggregation part of an elastic result to the format that
-   * dangle wants for its date-historgram
-   */
-  function dangleMapHistoData(data) {
-    return {
-      _type: 'date_histogram',
-      entries: data.buckets.map(function (r) {
-        return {time: r.key, count: r.doc_count};
-      })
-    };
-  }
-
-  /**
-   * Passing data to the Tree Diagram
-   */
-  function mainTreeMapDiagramData(data) {
-    return {
-      _type: 'name',
-      entries: data.buckets.map(function (r) {
-        return {main: r};
-      })
-    };
-  }
-
   //
   // Demo controller
   app.controller('FacetedDemoController', ['$scope', '$log', '$filter', 'esClient',
@@ -108,7 +83,9 @@
       this.roleLongname = {
         abg: 'Member of Parl.',
         other: 'Other',
-        pres: 'President'
+        pres: 'President',
+        kanz: 'Chancellor',
+        reg: 'Member of Administration'
       };
 
       // Configure facets
@@ -222,6 +199,31 @@
             interval: 'month'
           }
         });
+
+      /**
+       * Map aggregation part of an elastic result to the format that
+       * dangle wants for its date-historgram
+       */
+      function dangle_mapHistoData(data) {
+        return {
+          _type: 'date_histogram',
+          entries: data.buckets.map(function (r) {
+            return {time: r.key, count: r.doc_count};
+          })
+        };
+      }
+
+      /**
+       * Passing data to the Tree Diagram
+       */
+      function dangle_mainTreeMapDiagramData(data) {
+        return {
+          _type: 'name',
+          entries: data.buckets.map(function (r) {
+            return {main: r};
+          })
+        };
+      }
 
       /**
        * This is a demo method that shows that aggregations can easily be
@@ -408,8 +410,8 @@
 
             // Further prepare result as needed
             // (some components need the results in diferent form)
-            self.dangleDateHisto = dangleMapHistoData(self.aggregations.dateLimited);
-            self.mainTreeDiagram = mainTreeMapDiagramData(self.aggregations.name);
+            self.dangleDateHisto = dangle_mapHistoData(self.aggregations.dateLimited);
+            self.mainTreeDiagram = dangle_mainTreeMapDiagramData(self.aggregations.name);
           })
           .catch(function (error) {
             self.statusOk = false;
@@ -428,7 +430,7 @@
             // Set new values to our slider and the 'full-date' histogram
             // (which is not affected by the date query)
             var agg = self.aggregations.date, dummy;
-            self.dangleFullDateHisto = dangleMapHistoData(agg);
+            self.dangleFullDateHisto = dangle_mapHistoData(agg);
 
             self.dateSliderOptions.floor =
               agg.buckets[0].key;
@@ -503,5 +505,6 @@
 
       // Initialise with call to refresh
       this.refresh();
+
     }]);
 })();

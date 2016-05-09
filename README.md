@@ -82,6 +82,26 @@ Find the executables in `elasticsearch-2.1.0/bin` .
 exectue the file `elasticsearch-2.1.0\bin\elasticsearch.bat`
 
 
+## Import documents
+
+1. delete any old index (if you want to reload)
+
+    curl -XDELETE 'localhost:9200/opendata?pretty'
+
+2. create the index
+
+    curl -XPUT 'localhost:9200/opendata?pretty'
+
+3. create and load the mapping file
+
+    curl -XPUT localhost:9200/opendata/statement/_mapping?pretty -d @data/mapping.json
+
+4. load the json dataset
+
+    curl -XPOST localhost:9200/opendata/statement/_bulk?pretty --data-binary @data/export-minimal.json
+
+
+
 # Project Screenshots:
 <img src="/screenshots/application_native.png" width="358" height="532">
 <img src="/screenshots/application_elasticui.png" width="358" height="532">

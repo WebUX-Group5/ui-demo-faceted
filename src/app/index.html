@@ -37,20 +37,29 @@
   <div class="header">
 
     <ul class="nav nav-pills pull-right sm">
-      <li class="active"><a href="index.html#">Home</a></li>
+      <!-- <li class="active"><a href="index.html#">Home</a></li> -->
+      <li><a data-toggle="modal" data-target="#aboutModal" class="btn btn-default">
+        <span class="glyphicon glyphicon-info-sign"></span> Info</a>
+      </span>
+      <!-- <li><a href="https://github.com/WebUX-Group5/ui-demo-faceted" target="_blank">Info</a> -->
     </ul>
 
-    <h1 class="text-muted">Elasticsearch</h1>
+    <h1 class="text-muted">faceted-debate <small>alpha/demo</small></h1>
   </div>
 
   <div class="row" ng-controller="FacetedDemoController as c">
     <div class="col-lg-4 col-md-5 col-sm-6">
-      <label><input type="checkbox" ng-model="c.showQuery"/>Show Query</label>
-      (Took {{c.lastQueryTime / 1000}} sec.)
-      <div ng-show="c.showQuery">
-        <pre>{{c.query}}</pre>
-        <pre>{{c.queryDSL}}</pre>
+
+      <div ng-if="false">
+        <label><input type="checkbox" ng-model="c.showQuery"/>Show Query</label>
+        (Took {{c.lastQueryTime / 1000}} sec.)
+
+        <div ng-show="c.showQuery">
+          <pre>{{c.query}}</pre>
+          <pre>{{c.queryDSL}}</pre>
+        </div>
       </div>
+
       <form>
 
         <div class="facet-widget">
@@ -118,7 +127,7 @@
             <a class="btn btn-default btn-sm" ng-if="c.queryContains('role')" ng-click="c.resetField('role')">reset</a>
           </div>
           <div>
-            <label><input type="checkbox" ng-model="c.showHiddenChart" ng-change="c.updateHiddenChartSetting()"/>Show Hidden Charts</label>
+            <label><input type="checkbox" ng-model="c.showHiddenChart" ng-change="c.updateHiddenChartSetting()"/>Show more ...</label>
           </div>
 
           <div ng-repeat="bucket in c.aggregations.role.buckets"
@@ -169,7 +178,7 @@
           </h4>
 
           <div>
-            <label><input type="checkbox" ng-model="c.showHiddenChart" ng-change="c.updateHiddenChartSetting()"/>Show Hidden Charts</label>
+            <label><input type="checkbox" ng-model="c.showHiddenChart" ng-change="c.updateHiddenChartSetting()"/>Show more ...</label>
 
             <div ng-show="c.showHiddenChart">
               <durationPieChart-gui-item bind="c.aggregations.duration.buckets"></durationPieChart-gui-item>
@@ -253,11 +262,11 @@
       <div ng-show="c.tabIsShown('vis')">
         <div class="facet-widget">
           <div style="display:inline-block;width: 700px; heigth:800px">
-            <h4>Speech Dates Histogram</h4>
+            <h4>#Speeches by Date</h4>
             <fs-date-histo bind="c.dangleDateHisto"></fs-date-histo>
           </div>
         </div>
-        <h3>Overall Diagram View</h3>
+        <h4>#Speeches Per Person and Duration (secs.)</h4>
         {{c.aggregations.buckets}}
         <maindendogram-gui-item bind="c.mainTreeDiagram"
                                 confirm-action="convertPartyCase(arg1)"></maindendogram-gui-item>
@@ -268,9 +277,27 @@
   </div> <!-- END row/container/controller -->
 
   <div class="footer">
-    <p>Info / source: <a href="https://github.com/WebUX-Group5/ui-demo-faceted">https://github.com/WebUX-Group5/ui-demo-faceted</a>
+    <p>
+      <a href="mailto:faceted-debate@tt4.at">faceted-debate@tt4.at</a>
+       | Info / source: <a href="https://github.com/WebUX-Group5/ui-demo-faceted" target="_blank">https://github.com/WebUX-Group5/ui-demo-faceted</a>
+       | Data via <a href="http://www.offenesparlament.at" target="_blank">http://www.offenesparlament.at</a>
+    </p>
   </div>
-</div>
+
+  <!-- Modal info -->
+  <!-- <div ></div> -->
+  <div class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    id="aboutModal"
+    ng-include="'/about.html'">
+  </div>
+
+</div> <!-- container -->
+
+<a href="https://github.com/WebUX-Group5/ui-demo-faceted"><img style="position: absolute; top: 0; left: 0; border: 0;"
+src="https://camo.githubusercontent.com/c6625ac1f3ee0a12250227cf83ce904423abf351/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub"
+data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png"></a>
 
 <!-- build:js scripts/vendor.js -->
 <!-- bower:js -->
