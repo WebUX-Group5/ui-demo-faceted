@@ -28,9 +28,7 @@
     </span>
     <span class="role">{{item.role}}</span>
 
-    <p class="text" ng-show="!itemExpanded">
-      {{item.text|limitTo : 160}}
-      <a class="expand" ng-click="expandToggle()">(more)</a>
+    <p class="text" ng-show="!itemExpanded"  ng-click="expandToggle()">{{item.text|limitTo : 160}} <a class="expand">(more)</a>
     </p>
     <p class="text" ng-show="itemExpanded"
       ng-bind-html="item.text | highlight:queryText">

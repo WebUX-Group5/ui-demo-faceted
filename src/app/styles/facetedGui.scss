@@ -79,6 +79,7 @@ $alternate-row-color: #eef;
         .text {
             white-space: pre-wrap;
         }
+        padding: 1em;
 
     }
 }
@@ -96,3 +97,11 @@ $alternate-row-color: #eef;
 
 
 h4 label {font-weight:normal; font-size:0.75em; }
+
+.paginate { margin: 1em 0; }
+.load-more {
+    @extend .btn;
+    @extend .btn-default;
+    width: 100%;
+    padding: 2em 0;
+}
