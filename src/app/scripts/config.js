@@ -8,7 +8,8 @@
    * Set the 'esClient' option to either 'py' or 'js'.
    */
   app.constant('Config', {
-    esClient: 'py',
+    //esClient: 'py',
+    esClient: 'js',
     pyEndpoint: '/search',
     esEndpoint: '',
   });
